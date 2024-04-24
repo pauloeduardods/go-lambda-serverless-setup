@@ -1,0 +1,31 @@
+service: basic-lambda-startup
+frameworkVersion: "3"
+
+custom:
+  functionName: ${sls:stage}-${self:service}
+
+params:
+  prod:
+    region: sa-east-1
+
+  dev:
+    region: us-east-1
+
+provider:
+  name: aws
+  deploymentMethod: direct
+  runtime: provided.al2023
+  region: ${param:region}
+  architecture: arm64
+
+package:
+  individually: true
+
+functions:
+  basic-lambda-startup:
+    name: ${self:custom.functionName}
+    description: Check the file extension and hash
+    handler: bootstrap
+    package:
+      artifact: ./bin/basic-lambda-startup.zip
+    memorySize: 256
